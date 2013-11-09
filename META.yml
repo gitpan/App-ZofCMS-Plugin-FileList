@@ -1,22 +1,25 @@
 ---
-name: App-ZofCMS-Plugin-FileList
-version: 0.0101
+abstract: 'ZofCMS plugin to display lists of files'
 author:
   - "Zoffix <'zoffix@cpan.org'>"
-abstract: ZofCMS plugin to display lists of files
-license: perl
-resources:
-  license: http://dev.perl.org/licenses/
-requires:
-  App::ZofCMS: 0.0106
-  File::Glob: 1.05
 build_requires:
   Test::More: 0
+configure_requires:
+  Module::Build: 0
+dynamic_config: 1
+generated_by: 'Module::Build version 0.4007, CPAN::Meta::Converter version 2.132830'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: App-ZofCMS-Plugin-FileList
 provides:
   App::ZofCMS::Plugin::FileList:
     file: lib/App/ZofCMS/Plugin/FileList.pm
-    version: 0.0101
-generated_by: Module::Build version 0.2808
-meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.2.html
-  version: 1.2
+    version: 0.0102
+requires:
+  App::ZofCMS: 0.0106
+  File::Glob: 1.05
+resources:
+  license: http://dev.perl.org/licenses/
+version: 0.0102
