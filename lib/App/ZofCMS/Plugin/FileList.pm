@@ -3,7 +3,7 @@ package App::ZofCMS::Plugin::FileList;
 use warnings;
 use strict;
 
-our $VERSION = '0.0102';
+our $VERSION = '0.0103';
 
 use File::Glob (qw/bsd_glob/);
 

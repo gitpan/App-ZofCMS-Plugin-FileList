@@ -1,42 +1,208 @@
-App-ZofCMS-Plugin-FileList
+NAME
+    App::ZofCMS::Plugin::FileList - ZofCMS plugin to display lists of files
 
-Module is a L<App::ZofCMS> plugin which provides means to display lists of files.
+SYNOPSIS
+    In your Main Config file or ZofCMS template:
 
-INSTALLATION
+        plugins     => [ qw/FileList/ ],
+        plug_file_list => {
+            list => {
+                list1 => 'pics',
+                list2 => 'pics2',
+            },
+        },
 
-To install this module, run the following commands:
+    In your HTML::Template template:
 
-	perl Build.PL
-	./Build
-	./Build test
-	./Build install
+        <ul>
+        <tmpl_loop name='list1'>
+            <li><a href="/<tmpl_var escape='html' name='path'>"><tmpl_var name='name'></a></li>
+        </tmpl_loop>
+        </ul>
 
-SUPPORT AND DOCUMENTATION
+        <ul>
+        <tmpl_loop name='list2'>
+            <li><a href="/<tmpl_var escape='html' name='path'>"><tmpl_var name='name'></a></li>
+        </tmpl_loop>
+        </ul>
 
-After installing, you can find documentation for this module with the
-perldoc command.
+DESCRIPTION
+    Module is a App::ZofCMS plugin which provides means to display lists of
+    files.
 
-    perldoc App::ZofCMS::Plugin::FileList
+    This documentation assumes you've read App::ZofCMS, App::ZofCMS::Config
+    and App::ZofCMS::Template
 
-You can also look for information at:
+MAIN CONFIG FILE OR ZofCMS TEMPLATE FIRST-LEVEL KEYS
+  "plugins"
+        plugins => [ qw/FileList/ ],
 
-    RT, CPAN's request tracker
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=App-ZofCMS-Plugin-FileList
+    You would definitely want to add the plugin into the list of plugins to
+    execute :)
 
-    AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/App-ZofCMS-Plugin-FileList
+  "plug_file_list"
+        plug_file_list => {
+            name => 0,
+            re   => qr/[.]jpg$/i,
+            list => {
+                list1 => 'pics',
+                list2 => [ qw/pics2 pics3/ ],
+            },
+        },
 
-    CPAN Ratings
-        http://cpanratings.perl.org/d/App-ZofCMS-Plugin-FileList
+        plug_file_list => {
+            list => [ qw/pics pics2/ ],
+        },
 
-    Search CPAN
-        http://search.cpan.org/dist/App-ZofCMS-Plugin-FileList
+        plug_file_list => {
+            list => 'pics',
+        },
 
+    You can specify the "plug_file_list" first-level key in either Main
+    Config File or ZofCMS Template file. Specifying the same keys in both
+    will lead to the ones set in ZofCMS Template take precedence.
 
-COPYRIGHT AND LICENCE
+    The "plug_file_list" key takes a hashref as a value. Possible
+    keys/values of that hashref are as follows:
 
-Copyright (C) 2008 'Zoffix
+  "list"
+        plug_file_list => {
+            list => {
+                list1 => 'pics',
+                list2 => [ qw/pics2 pics3/ ],
+            },
+        },
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+        plug_file_list => {
+            list => [ qw/pics pics2/ ],
+        },
+
+        plug_file_list => {
+            list => 'pics',
+        },
+
+    The "list" key specifies the directories in which to search for files.
+    The value of that key can be either a hashref, arrayref or a scalar. If
+    the value is not a hashref it will be converted into a hashref as
+    follows:
+
+        plug_file_list => {
+            list => 'pics', # a scalar
+        },
+
+        # same as
+
+        plug_file_list => {
+            list => [ 'pics' ], # arrayref
+        },
+
+        # same as
+
+        # hashref with a key that has a scalar value
+        plug_file_list => {
+            list => {
+                plug_file_list => 'pics',
+            }
+        },
+
+        # same as
+
+        # hashref with a key that has an arrayref value
+        plug_file_list => {
+            list => {
+                plug_file_list => [ 'pics' ],
+            }
+        },
+
+    The hashref assigned to "list" (or converted from other values) takes
+    the following meaning: the keys of that hashref are the names of the
+    keys in "{t}" ZofCMS Template special key and the values are the lists
+    (arrayrefs) of directories in which to search for files. See SYNOPSIS
+    section for some examples. Note that default "{t}" key would be
+    "plug_file_list" as is shown in conversion examples above.
+
+  "re"
+        plug_file_list => {
+            re   => qr/[.]jpg$/i,
+            list => 'pics',
+        },
+
+    Optional. The "re" argument takes a regex as a value ("qr//"). If
+    specified only the files that match the regex will be listed. By default
+    is not specified.
+
+  "name"
+        plug_file_list => {
+            name => 0,
+            list => 'foo',
+        },
+
+    Optional. Takes either true or false values, specifies whether or not to
+    create the "name" "<tmpl_var name="">" in the output. See
+    "HTML::Template TEMPLATES" section below. Defaults to: 1 (*do* create)
+
+HTML::Template TEMPLATES
+    In HTML::Template templates you'd show the file lists in the following
+    fashion:
+
+        <ul>
+        <tmpl_loop name='plug_file_list'>
+            <li><a href="/<tmpl_var escape='html' name='path'>"><tmpl_var name='name'></a></li>
+        </tmpl_loop>
+        </ul>
+
+    The name of the "<tmpl_loop name="">" is what you specified (directly or
+    indirectly) as keys in the "list" hashref (see above). Inside the loop
+    there are two "<tmpl_var name="">" that you can use:
+
+  "<tmpl_var name='path'>"
+    The "<tmpl_var name='path'>" will contain the path to the file, that is
+    the directory you specified . '/' . file name.
+
+  "<tmpl_var name='name'>"
+    The "<tmpl_var name='path'>" (providing the "name" key in
+    "plug_file_list" hashref is set to a true value) will contain just the
+    filename of the file.
+
+AUTHOR
+    'Zoffix, "<'zoffix at cpan.org'>" (<http://zoffix.com/>,
+    <http://haslayout.net/>, <http://zofdesign.com/>)
+
+BUGS
+    Please report any bugs or feature requests to
+    "bug-app-zofcms-plugin-filelist at rt.cpan.org", or through the web
+    interface at
+    <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=App-ZofCMS-Plugin-FileLi
+    st>. I will be notified, and then you'll automatically be notified of
+    progress on your bug as I make changes.
+
+SUPPORT
+    You can find documentation for this module with the perldoc command.
+
+        perldoc App::ZofCMS::Plugin::FileList
+
+    You can also look for information at:
+
+    *   RT: CPAN's request tracker
+
+        <http://rt.cpan.org/NoAuth/Bugs.html?Dist=App-ZofCMS-Plugin-FileList
+        >
+
+    *   AnnoCPAN: Annotated CPAN documentation
+
+        <http://annocpan.org/dist/App-ZofCMS-Plugin-FileList>
+
+    *   CPAN Ratings
+
+        <http://cpanratings.perl.org/d/App-ZofCMS-Plugin-FileList>
+
+    *   Search CPAN
+
+        <http://search.cpan.org/dist/App-ZofCMS-Plugin-FileList>
+
+COPYRIGHT & LICENSE
+    Copyright 2008 'Zoffix, all rights reserved.
+
+    This program is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
 

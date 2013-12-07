@@ -10,17 +10,20 @@ my $builder = Module::Build->new(
     build_requires => {
         'Test::More' => 0,
     },
+    build_recommends => {
+        'App::ZofCMS::Test::Plugin' => 0.0104,
+    },
     requires => {
         'App::ZofCMS' => 0.0106,
         'File::Glob'  => 1.05,
-    },
-    build_recommends => {
-        'App::ZofCMS::Test::Plugin' => 0.0104,
         'perl'                      => '5.006',
     },
     configure_requires => { 'Module::Build' => 0 },
     add_to_cleanup      => [ 'App-ZofCMS-Plugin-FileList-*' ],
     create_makefile_pl => 'traditional',
 );
+if ( $ENV{RELEASE_TESTING} ) {
+    system('pod2text lib/App/ZofCMS/Plugin/FileList.pm > README');
+}
 
 $builder->create_build_script();

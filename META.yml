@@ -16,10 +16,11 @@ name: App-ZofCMS-Plugin-FileList
 provides:
   App::ZofCMS::Plugin::FileList:
     file: lib/App/ZofCMS/Plugin/FileList.pm
-    version: 0.0102
+    version: 0.0103
 requires:
   App::ZofCMS: 0.0106
   File::Glob: 1.05
+  perl: 5.006
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.0102
+version: 0.0103
